@@ -1,0 +1,28 @@
+function [dx,dy,dz]=distance(vx,vy,vz,fs)
+
+%%input the calculated velocities and the obatained acclerometers.
+%%distance is calculated based on the function that distance=V(initial) * t + 0.5 * a*t^2
+vr=sqrt(vx.^2+vy.^2+vz.^2);
+
+dx = (cumsum([0;vx(1:end-1,:)])+vx./2)./fs;
+dy = (cumsum([0;vy(1:end-1,:)])+vy./2)./fs;
+dz = (cumsum([0;vz(1:end-1,:)])+vz./2)./fs;
+
+%% the distance in 3 axis merged together, and plot it with time
+%dr=sqrt(dx.^2 + dy.^2 +dz.^2);
+dr = (cumsum([0;vr(1:end-1,:)])+vr./2)./fs;
+time=[1:length(dx)]./fs;
+figure
+plot(time,dr,'.-'); 
+%plot(time,dx,'.-');
+hold on
+% subplot(2,2,2);
+% plot(time,dy);
+% %plot3(dx,dy,dz,'.-');
+% hold on
+% subplot(2,2,3);
+% plot(time,dz);
+% hold on
+% subplot(2,2,4);
+% plot3(dx,dy,dz)
+% hold on
