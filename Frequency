@@ -33,4 +33,3 @@ N = length(r);
     % find the maximum power frequency value
     [maxvalue,position]=max(abs(R));
     Fremax=f(1,position);
-    

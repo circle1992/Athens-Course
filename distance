@@ -9,13 +9,12 @@ dy = (cumsum([0;vy(1:end-1,:)])+vy./2)./fs;
 dz = (cumsum([0;vz(1:end-1,:)])+vz./2)./fs;
 
 %% the distance in 3 axis merged together, and plot it with time
-%dr=sqrt(dx.^2 + dy.^2 +dz.^2);
-dr = (cumsum([0;vr(1:end-1,:)])+vr./2)./fs;
+dr=sqrt(dx.^2 + dy.^2 +dz.^2);
 time=[1:length(dx)]./fs;
-figure
-plot(time,dr,'.-'); 
-%plot(time,dx,'.-');
-hold on
+% subplot(2,2,1);
+% %plot(time,dr,'.-'); 
+% plot(time,dx);
+% hold on
 % subplot(2,2,2);
 % plot(time,dy);
 % %plot3(dx,dy,dz,'.-');
