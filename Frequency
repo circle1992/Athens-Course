@@ -1,6 +1,6 @@
 function [F25, F75, Fremax] = Frequency(r, fs)
 
-N = length(r);
+    N = length(r);
 
     % Energy spectrum of r
     % help fft
@@ -12,24 +12,38 @@ N = length(r);
     %help cumsum
     CR = cumsum(R);
     % normalisation
+    CR = CR(1:round(length(CR)/2),1);
     CR = CR / max(CR);
     
-%     subplot(2,1,1)
-%     plot(f(1:N),R)
-%     hold on
-%     xlabel('frequency (Hz)')
-%     subplot(2,1,2)
-%     plot(f, CR)
-%     hold on
+    subplot(2,1,1)
+%     plot(f,R)
+    Rnew = 20*log10(R);
+    plot(f(1:round(N/2)),Rnew(1:round(length(Rnew)/2),1));
+    hold on
+    xlabel('frequency (Hz)')
+    ylabel('magnitude (DB)')
+    
+    subplot(2,1,2)
+%   plot(f,CR);
+    plot(f(1:round(N/2)), CR);
+    title('normalised signal magnitude');
+    hold on
     
     
     % help find
-    index = find (CR<0.25/2);
-    F25 = (max(index)-1)*fs/N;
-
-    index = find (CR<0.75/2);
-    F75 = (max(index)-1)*fs/N;
+    index = find (CR<=0.25);
+    F25 = max(index-1)*fs/N;
+    %V25 = CR(max(index),1);
+    V25=0.25;
+    
+    index = find (CR<=0.75);
+    F75 = max(index-1)*fs/N;
+    %V75 = CR(max(index),1);
+    V75=0.75;
+  
+    plot(F25,V25,'r*', F75,V75, 'r*');
     
     % find the maximum power frequency value
     [maxvalue,position]=max(abs(R));
     Fremax=f(1,position);
+    
