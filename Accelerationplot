@@ -1,0 +1,18 @@
+load data2017.mat
+
+for i=1:14
+    ax = data.brushing(i).x;
+    ay = data.brushing(i).y;
+    az = data.brushing(i).z;
+
+    fs=128;
+    N=length(ax);
+    t=(0:N-1)/fs;
+    
+    figure
+    plot(t,ax,t,ay,t,az)
+    xlabel('time (s)')
+    ylabel('ax (m/s^2)')
+    
+    legend('ax','ay','az')
+end
