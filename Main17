@@ -1,0 +1,441 @@
+%% MACHINE LEARNING ASSIGNMENT 2017
+%% Clear workspace
+clear 
+close all
+
+%% Load data structure
+load data2017.mat
+
+%% Number of observations and initialization of feature matrix X and label vector Y
+n = size(data.brushing,2) + size(data.drinking,2)+ size(data.shoe,2) + size(data.writing,2);
+X = zeros(n,12);
+Y = zeros(n,1);
+fs = 128;
+
+%% Filling up the feature matrix X and label vector Y
+% Filling brush activities
+figure
+for i = 1: size(data.brushing,2)
+    ax = data.brushing(i).x;
+    ay = data.brushing(i).y;
+    az = data.brushing(i).z;
+    % Gravitational Features
+    gx = mean(ax);
+    gy = mean(ay);
+    gz = mean(az);
+    
+    r = sqrt(ax.^2 + ay.^2 +az.^2);
+   
+    sigma = std(r);
+
+    sk = skewness(r);
+    
+    ku = kurtosis(r);
+    
+    % function for calculating 25th and 75th percentile
+   
+    [F25, F75,Fremax] = Frequency(r,fs);
+    
+    % calculate the velocity
+
+    vx = (cumsum([0;ax(1:end-1,:)])+ax./2)./fs;
+    vy = (cumsum([0;ay(1:end-1,:)])+ay./2)./fs;
+    vz = (cumsum([0;az(1:end-1,:)])+az./2)./fs;
+    
+    time= [1:length(ax)]./fs;
+   % figure
+%     plot(time, vx, time, vy, time, vz);
+%     legend('vx','vy','vz');
+    
+    
+    % mean of velocity
+    meanvx = mean(vx);
+    meanvy = mean(vy);
+    meanvz = mean(vz);
+    
+    % using the trajectory as the features
+    
+    [dx.brushing,dy.brushing,dz.brushing]=distance(vx,vy,vz,fs);
+    
+    % filling up feature matrix
+    X(i,:) = [gx, gy, gz, sigma, sk, ku, F25, F75,Fremax, meanvx, meanvy,meanvz];
+    Y(i) = 1;
+end
+
+figure
+
+N=length(ax);
+t=(0:N-1)/fs;
+subplot(3,1,1)
+
+plot(t, ax)
+title('Brushing')
+xlabel('time (s)')
+ylabel('ax (m/s^2)')
+subplot(3,1,2)
+plot(t,ay)
+xlabel('time (s)')
+ylabel('ay (m/s^2)')
+subplot(3,1,3)
+plot(t,az)
+xlabel('time (s)')
+ylabel('az (m/s^2)')
+disp('Feature vector brushing')
+[gx, gy, gz, sigma, sk, ku, F25, F75,Fremax, meanvx, meanvy,meanvz]
+
+offset = i;
+%% Filling up the feature matrix X and label vector Y    
+% Filling drinking activities
+for i = 1: size(data.drinking,2)
+    ax = data.drinking(i).x;
+    ay = data.drinking(i).y;
+    az = data.drinking(i).z;
+    % Gravitational Features
+    gx = mean(ax);
+    gy = mean(ay);
+    gz = mean(az);
+    
+    r = sqrt(ax.^2 + ay.^2 +az.^2);
+   
+    sigma = std(r);
+   
+    sk = skewness(r);
+    
+    ku = kurtosis(r);
+    
+    % function for calculating 25th and 75th percentile
+   
+    [F25, F75, Fremax] = Frequency(r,fs);
+    
+     % calculate the velocity
+    vx = (cumsum([0;ax(1:end-1,:)])+ax./2)./fs;
+    vy = (cumsum([0;ay(1:end-1,:)])+ay./2)./fs;
+    vz = (cumsum([0;az(1:end-1,:)])+az./2)./fs;
+    
+    time= [1:length(ax)]./fs;
+    
+%     time= [1:length(ax)]./fs;
+%     figure
+%     plot(time, vx, time, vy, time, vz);
+%     legend('vx','vy','vz');
+    
+    
+    % mean of velocity
+    meanvx = mean(vx);
+    meanvy = mean(vy);
+    meanvz = mean(vz);
+        
+    % trajectory as the feature
+    [dx.drinking,dy.drinking,dz.drinking]=distance(vx,vy,vz,fs);
+    
+    % filling up feature matrix
+    X(i+offset,:) = [gx, gy, gz, sigma, sk, ku, F25, F75,Fremax, meanvx, meanvy,meanvz];
+    Y(i+offset) = 2;
+end
+
+offset = offset + i; 
+
+figure
+
+N=length(ax);
+t=(0:N-1)/fs;
+subplot(3,1,1)
+
+plot(t, ax)
+title('Drinking')
+xlabel('time (s)')
+ylabel('ax (m/s^2)')
+subplot(3,1,2)
+plot(t,ay)
+xlabel('time (s)')
+ylabel('ay (m/s^2)')
+subplot(3,1,3)
+plot(t,az)
+xlabel('time (s)')
+ylabel('az (m/s^2)')
+
+disp('Feature vector drinking')
+[gx, gy, gz, sigma, sk, ku, F25, F75,Fremax, meanvx, meanvy,meanvz]
+%% Filling up the feature matrix X and label vector Y
+% Filling shoe activities
+for i = 1: size(data.shoe,2)
+    ax = data.shoe(i).x;
+    ay = data.shoe(i).y;
+    az = data.shoe(i).z;
+    % Gravitational Features
+    % help mean
+    gx = mean(ax);
+    gy = mean(ay);
+    gz = mean(az);
+    
+    r = sqrt(ax.^2 + ay.^2 +az.^2);
+    % help std
+    sigma = std(r);
+    % help skewness
+    sk = skewness(r);
+    
+    ku = kurtosis(r);
+    % function for calculating 25th and 75th percentile
+   
+    [F25, F75,Fremax] = Frequency(r,fs);
+    
+         % calculate the velocity
+    
+    vx = (cumsum([0;ax(1:end-1,:)])+ax./2)./fs;
+    vy = (cumsum([0;ay(1:end-1,:)])+ay./2)./fs;
+    vz = (cumsum([0;az(1:end-1,:)])+az./2)./fs;
+    
+    time= [1:length(ax)]./fs;
+    
+%     time= [1:length(ax)]./fs;
+%     figure
+%     plot(time, vx, time, vy, time, vz);
+%     legend('vx','vy','vz');
+    
+    
+    % mean of velocity
+    meanvx = mean(vx);
+    meanvy = mean(vy);
+    meanvz = mean(vz);
+    
+    %distance as the trajectory
+    [dx.shoe,dy.shoe,dz.shoe]=distance(vx,vy,vz,fs);
+    
+    % filling up feature matrix
+    X(i+offset,:) = [gx, gy, gz, sigma, sk,ku, F25, F75,Fremax,meanvx, meanvy,meanvz];
+    Y(i+offset) = 3;
+end
+
+offset = offset + i; 
+
+figure
+
+N=length(ax);
+t=(0:N-1)/fs;
+subplot(3,1,1)
+
+plot(t, ax)
+title('Shoe')
+xlabel('time (s)')
+ylabel('ax (m/s^2)')
+subplot(3,1,2)
+plot(t,ay)
+xlabel('time (s)')
+ylabel('ay (m/s^2)')
+subplot(3,1,3)
+plot(t,az)
+xlabel('time (s)')
+ylabel('az (m/s^2)')
+
+disp('Feature vector shoe')
+[gx, gy, gz, sigma, sk, ku, F25, F75,Fremax,meanvx, meanvy,meanvz]
+%% Filling up the feature matrix X and label vector Y
+% Filling writing activities
+for i = 1: size(data.writing,2)
+    ax = data.writing(i).x;
+    ay = data.writing(i).y;
+    az = data.writing(i).z;
+    % Gravitational Features
+    % help mean
+    gx = mean(ax);
+    gy = mean(ay);
+    gz = mean(az);
+    
+    r = sqrt(ax.^2 + ay.^2 +az.^2);
+    % help std
+    sigma = std(r);
+    % help skewness
+    sk = skewness(r);
+    
+    ku = kurtosis(r);
+    % function for calculating 25th and 75th percentile
+   
+    [F25, F75,Fremax] = Frequency(r,fs);
+    
+     % calculate the velocity
+    vx = (cumsum([0;ax(1:end-1,:)])+ax./2)./fs;
+    vy = (cumsum([0;ay(1:end-1,:)])+ay./2)./fs;
+    vz = (cumsum([0;az(1:end-1,:)])+az./2)./fs;
+    
+    time= [1:length(ax)]./fs;
+    
+%     time= [1:length(ax)]./fs;
+%     figure
+%     plot(time, vx, time, vy, time, vz);
+%     legend('vx','vy','vz');
+    
+    
+    % mean of velocity
+    meanvx = mean(vx);
+    meanvy = mean(vy);
+    meanvz = mean(vz);
+    
+    %trajectory as the feature
+   [dx.writing,dy.writing,dz.writing]=distance(vx,vy,vz,fs);
+    
+    % filling up feature matrix
+    X(i+offset,:) = [gx, gy, gz, sigma, sk, ku, F25, F75,Fremax,meanvx, meanvy,meanvz];
+    Y(i+offset) = 4;
+end
+
+figure
+
+N=length(ax);
+t=(0:N-1)/fs;
+subplot(3,1,1)
+plot(t, ax)
+title('Writing')
+
+xlabel('time (s)')
+ylabel('ax (m/s^2)')
+subplot(3,1,2)
+plot(t,ay)
+xlabel('time (s)')
+ylabel('ay (m/s^2)')
+subplot(3,1,3)
+plot(t,az)
+xlabel('time (s)')
+ylabel('az (m/s^2)')
+disp('Feature vector writing')
+[gx, gy, gz, sigma, sk, ku, F25, F75,Fremax,meanvx, meanvy,meanvz]
+
+%% Binary classification brushing vs rest
+
+Y= double(Y==1);
+
+%% Feature selection based on visual inspection
+
+gplotmatrix(X,[],Y)
+
+%% Splitting up in Training and Testing
+p1 = randperm(13);
+p0 = randperm(42)+13;
+
+Xtr = [X(p1(1:8),[1 6]);X(p0(1:28),[1 6])]; % SELECT the 1st and 6th features
+Ytr = [Y(p1(1:8));Y(p0(1:28))];
+
+Xte = [X(p1(9:13),[1 6]);X(p0(29:42),[1 6])];
+Yte = [Y(p1(9:13)); Y(p0(29:42))];
+
+%% Training a SVM model linear
+
+SVMModel = fitcsvm(Xtr,Ytr,'KernelFunction','linear');
+
+%% Constructing a grid and predicting elements in grid
+
+d = 0.01;
+[x1Grid,x2Grid] = meshgrid(min(Xtr(:,1)):d:max(Xtr(:,1)),...
+min(Xtr(:,2)):d:max(Xtr(:,2)));
+xGrid = [x1Grid(:),x2Grid(:)];
+
+[labels,score] = predict(SVMModel,xGrid);
+  
+
+%% Show trainings data
+   
+figure
+gscatter(xGrid(:,1),xGrid(:,2),labels,...
+    [0.1 0.5 0.5; 0.5 0.1 0.5; 0.5 0.5 0.1]);
+hold on
+gscatter(Xtr(:,1),Xtr(:,2),Ytr);
+    
+axis tight
+hold off
+    
+    
+%% Show test data
+
+
+figure
+gscatter(xGrid(:,1),xGrid(:,2),labels,...
+    [0.1 0.5 0.5; 0.5 0.1 0.5; 0.5 0.5 0.1;0.5 0.5 0.5]);
+hold on
+gscatter(Xte(:,1),Xte(:,2),Yte);
+
+
+axis tight
+hold off
+
+%% Calculate the accuracy
+
+[YPte,score] = predict(SVMModel,Xte);
+C = confusionmat(Yte,YPte)
+accuracy = trace(C)/sum(sum(C))
+
+%% ROC curve one vs rest
+
+% help resubPredict
+% [~,score] = resubPredict(Mdl);
+% Class1 vs Class2
+%help perfcurve
+[fpr,tpr,T,AUC,OPTROCPT] = perfcurve(Yte+1,score(:,1),1);
+AUC
+figure
+plot(fpr,tpr,'.-')
+hold on
+plot(OPTROCPT(1),OPTROCPT(2),'ro')
+xlabel('False positive rate')
+ylabel('True positive rate')
+title('ROC Curve for one vs rest SVM')
+
+
+%% Training a SVM model RBF
+%help fitcsvm
+SVMModel = fitcsvm(Xtr,Ytr,'KernelFunction','rbf');
+
+%% Constructing a grid and predicting elements in grid
+
+d = 0.01;
+[x1Grid,x2Grid] = meshgrid(min(Xtr(:,1)):d:max(Xtr(:,1)),...
+min(Xtr(:,2)):d:max(Xtr(:,2)));
+xGrid = [x1Grid(:),x2Grid(:)];
+
+[labels,score] = predict(SVMModel,xGrid);
+  
+
+%% Show trainings data
+   
+figure
+gscatter(xGrid(:,1),xGrid(:,2),labels,...
+    [0.1 0.5 0.5; 0.5 0.1 0.5; 0.5 0.5 0.1]);
+hold on
+gscatter(Xtr(:,1),Xtr(:,2),Ytr);
+    
+axis tight
+hold off
+    
+    
+%% Show test data
+
+
+figure
+gscatter(xGrid(:,1),xGrid(:,2),labels,...
+    [0.1 0.5 0.5; 0.5 0.1 0.5; 0.5 0.5 0.1;0.5 0.5 0.5]);
+hold on
+gscatter(Xte(:,1),Xte(:,2),Yte);
+
+
+axis tight
+hold off
+
+%% Calculate the accuracy
+
+[YPte,score] = predict(SVMModel,Xte);
+C = confusionmat(Yte,YPte)
+accuracy = trace(C)/sum(sum(C))
+
+%% ROC curve one vs rest
+
+% help resubPredict
+% [~,score] = resubPredict(Mdl);
+% Class1 vs Class2
+%help perfcurve
+[fpr,tpr,T,AUC,OPTROCPT] = perfcurve(Yte+1,score(:,1),1);
+AUC
+figure
+plot(fpr,tpr,'.-')
+hold on
+plot(OPTROCPT(1),OPTROCPT(2),'ro')
+xlabel('False positive rate')
+ylabel('True positive rate')
+title('ROC Curve for one vs rest SVM')
